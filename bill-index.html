@@ -80,7 +80,7 @@
 <script>
   const params = new URLSearchParams(window.location.search);
   const room = params.get('room') || 'A101';
-  const url = "https://script.google.com/macros/s/AKfycbz3v8vOvq6QdoqUReDPTjM5H3PqE0eSHPGg26wTb9AbLtIdwl_EI_7HQt-GJj8ySg7r/exec?room=" + encodeURIComponent(room);
+  const url = "https://script.google.com/macros/s/AKfycby6O6MsX-mSkZzKF3uL0ixkhaYqR5WNUolISzY57L_upIxCAW79FAugbpPAEAD_5UnzRw/exec" + encodeURIComponent(room);
 
   fetch(url)
     .then(res => res.json())
