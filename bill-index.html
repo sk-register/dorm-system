@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>รายละเอียดบิลหอพัก</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    @font-face {
+      font-family: 'FC Minimal';
+      src: url('FC-Minimal-Regular.ttf') format('truetype');
+    }
+    body {
+      font-family: 'FC Minimal', sans-serif;
+      background: #f3f4f6;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+    .bill {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 600px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      font-size: 2rem;
+    }
+    table {
+      width: 100%;
+      margin-top: 1.5rem;
+      margin-bottom: 2.5rem;
+      font-size: 1.3rem;
+    }
+    td {
+      padding: 0.75rem 0;
+    }
+    td.label {
+      color: #555;
+      width: 45%;
+    }
+    td.value {
+      text-align: right;
+      font-weight: bold;
+    }
+    .total {
+      font-size: 1.5rem;
+      color: #d97706;
+    }
+    .qr-section {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .qr-section img {
+      width: 220px;
+      height: 220px;
+      margin-bottom: 1rem;
+    }
+    .btn {
+      background: #facc15;
+      border: none;
+      padding: 1rem;
+      width: 100%;
+      font-size: 1.3rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="bill" id="bill-content">
+    <h2>กำลังโหลด...</h2>
+  </div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const room = params.get('room') || 'A101';
+  const url = "https://script.google.com/macros/s/AKfycbz3v8vOvq6QdoqUReDPTjM5H3PqE0eSHPGg26wTb9AbLtIdwl_EI_7HQt-GJj8ySg7r/exec?room=" + encodeURIComponent(room);
+
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      const html = `
+        <h2>รายละเอียดบิลหอพัก</h2>
+        <table>
+          <tr><td class="label">ห้องพัก</td><td class="value">${data.room}</td></tr>
+          <tr><td class="label">ชื่อผู้เช่า</td><td class="value">${data.name}</td></tr>
+          <tr><td class="label">รอบบิล</td><td class="value">${data.month}</td></tr>
+          <tr><td class="label">ค่าไฟ</td><td class="value">${data.electric} บาท</td></tr>
+          <tr><td class="label">ค่าน้ำ</td><td class="value">${data.water} บาท</td></tr>
+          <tr><td class="label">ค่าเช่า</td><td class="value">${data.rent} บาท</td></tr>
+          <tr><td class="label total">รวมยอด</td><td class="value total">${data.total} บาท</td></tr>
+        </table>
+        <div class="qr-section">
+          <img src="https://promptpay.io/0800000000/${data.total}" alt="QR Code" />
+          <div style="font-size: 1.1rem;">โอนเงินผ่านพร้อมเพย์: 080-000-0000</div>
+        </div>
+        <a href="bill.html?room=${data.room}"><button class="btn">📤 แจ้งโอนและแนบสลิป</button></a>
+      `;
+      document.getElementById("bill-content").innerHTML = html;
+    })
+    .catch(err => {
+      document.getElementById("bill-content").innerHTML = "<h2>เกิดข้อผิดพลาดในการโหลดข้อมูล</h2>";
+      console.error(err);
+    });
+</script>
+</body>
+</html>
